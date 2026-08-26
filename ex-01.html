@@ -12,11 +12,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SEMANTIC</title> <!-- meta tag, title não é H1-->
+
+    <style>
+        .oculto{
+            display: none;
+        }
+    </style>
 </head>
 <body>
     <header class="box-nav">
         <h1>PORTAL WEB</h1>
-        <nav>
+        <na aria-label="">
             <ul>
                 <li><a href="">Inicio</a></li>
                 <li><a href="">Teste</a></li>
@@ -29,7 +35,7 @@
           <input type="button" value="MOSTRAR/OCULTAR" id="btn">
         </section>
 
-        <section class="cards" id="noticias">
+        <section class="oculto" id="noticias">
             <h2>NOTICIAS</h2>
             <article class="card">
                 <img src="" alt="">
@@ -62,9 +68,12 @@
     </footer>
 
     <script>
-        const btn = document.querySelector(#btn);
-        const noticias = document.querySelector(#noticias);
+        const btn = document.querySelector("#btn");
+        const noticias = document.querySelector("#noticias");
 
+        btn.addEventListener("click", () => {
+            noticias.classList.toggle("oculto")
+        })
     </script>
 </body>
 </html>
