@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+  <form id="frmCadastro">
+    <div>
+        <label for="txtCEP">CEP</label>
+        <input type="text" id="txtCEP" name="txtCEP" maxlength="9" placeholder="00000-000" required>
+    </div>
+
+    <div>
+        <label for="txtLogradouro">Logradouro</label>
+        <input type="text" id="txtLogradouro" name="txtLogradouro" placeholder="Rua dos 3 poderes" readonly>
+    </div>
+
+    <div>
+        <label for="txtCidade">Cidade</label>
+        <input type="text" id="txtCidade" name="txtCidade" placeholder="Guarulhos" readonly>
+    </div>
+
+    <div>
+        <label for="txtEstado">Estado</label>
+        <input type="text" id="txtEstado" name="txtEstado" placeholder="São Paulo" readonly>
+    </div>
+
+    <div>
+        <label for="txtDDD">DDD</label>
+        <input type="text" id="txtDDD" name="txtDDD" placeholder="11" readonly>
+    </div>
+</form>
+
+<script>
+    const cep = document.querySelector('#txtCEP');
+    const logradouro = document.querySelector('#txtLogradouro');
+    const cidade = document.querySelector('#txtCidade');
+    const uf = document.querySelector('#txtEstado');
+    const ddd = document.querySelector('#txtDDD');
+
+    cep.addEventListener("input", function () {
+
+        // Remove tudo que não for número
+        let valor = cep.value.replace(/\D/g, "");
+
+        // Limita a 8 números
+        valor = valor.substring(0, 8);
+
+        // Aplica a máscara 00000-000
+        if (valor.length > 5) {
+            valor = valor.substring(0, 5) + "-" + valor.substring(5);
+        }
+
+        cep.value = valor;
+
+        const cepNumerico = valor.replace(/\D/g, "");
+
+        if (cepNumerico.length === 8) {
+            consultarCEP(cepNumerico);
+        }
+    });
+
+
+    async function consultarCEP(cepInformado) {
+
+        try {
+            const resposta = await fetch(
+                `https://viacep.com.br/ws/${cepInformado}/json/`
+            );
+
+            if (!resposta.ok) {
+                throw new Error("Erro ao consultar o CEP");
+            }
+
+            const dados = await resposta.json();
+
+            if (dados.erro) {
+                alert("CEP não encontrado");
+                return;
+            }
+
+            logradouro.value = dados.logradouro;
+            cidade.value = dados.localidade;
+            uf.value = dados.uf;
+            ddd.value = dados.ddd;
+
+        } catch (erro) {
+            alert("Não foi possível consultar o CEP");
+            console.error(erro);
+        }
+    }
+</script>
+
+</body>
+</html>
