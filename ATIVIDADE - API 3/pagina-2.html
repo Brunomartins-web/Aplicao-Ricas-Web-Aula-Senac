@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carregar Produtos</title>
+</head>
+<body>
+    <h1>Ctalogo de Produtos</h1>
+
+    <div class="toolbar">
+        <button onclick="carregarProdutos()">Carregar Produtos</button>
+        <input type="text" placeholder="Pesquisar produto..." id="pesquisa" onkeyup="FiltrarProdutos()">
+    </div>
+
+    <div id="status"></div>
+    <div id="produtos"></div>
+
+    <script>
+
+        let listaProdutos = [];
+
+        async function carregarProdutos() {
+            document.getElementById("status").innerHTML = '<div class="loading">Carregando produtos...</div>';
+
+            try{
+                const response = await fetch("https://dummyjson.com/products");
+
+                console.log(response);
+
+                const dados = await response.json();
+
+                listaProdutos = dados.products;
+
+                exibirProdutos(listaProdutos);
+
+                document.getElementById("status").innerHTML ="";
+
+            } 
+            
+            catch (erro){
+                console.error(erro);
+                document.getElementById("status").innerHTML = `<div class="loading">Erro ao carregar produtos</div>`;
+            }
+
+        }
+
+        function exibirProdutos(produtos){
+            const container = document.getElementById("produtos");
+            container.innerHTML = "";
+            produtos.forEach(produto => {
+                container.innerHTML += 
+                `<div class="card">
+                    <img src="${produto.thumbnail}" alt="${produto.title}">
+
+                    <div class="card-content">
+                        <h3>${produto.title}</h3>
+
+                        <p class="descricao">
+                            ${produto.description}
+                        </p>
+                        
+                        <div class="preco">
+                            us$ ${produto.price}
+                        </div>
+                        
+                        <div class="info">
+                            <span>${produto.rating}</span>
+                            <span>${produto.category}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+                            
+            });
+        }
+    </script>
+</body>
+</html>
